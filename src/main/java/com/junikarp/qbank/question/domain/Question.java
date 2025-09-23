@@ -2,7 +2,7 @@ package com.junikarp.qbank.question.domain;
 
 import java.util.List;
 
-public class question {
+public class Question {
     private Long id;
     private String question;
     private String explanation;
