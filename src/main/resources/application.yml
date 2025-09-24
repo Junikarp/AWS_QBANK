@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: AWS_QBANK
+
+  config:
+    import: classpath:application-secret.yml
