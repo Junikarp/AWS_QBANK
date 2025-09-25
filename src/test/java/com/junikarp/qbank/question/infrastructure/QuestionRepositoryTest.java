@@ -27,13 +27,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class QuestionRepositoryTest {
 
     @Autowired
-    QuestionRepository questionRepository;
+    QuestionJpaRepository questionRepository;
 
     @Test
     void findAll로_모든_문제_데이터를_가져올_수_있다() {
         //given
         //when
-        List<Question> list = questionRepository.findAll();
+        List<QuestionEntity> list = questionRepository.findAll();
 
         //then
         assertThat(list.get(0).getQuestion()).isEqualTo("1번 문제 입니다.");
