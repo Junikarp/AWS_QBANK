@@ -7,5 +7,5 @@ import java.util.List;
 public interface QuestionService {
 
     List<QuestionEntity> createRandomQuestionList(Long Quantity);
-
+    
 }
