@@ -79,4 +79,30 @@ public class QuestionServiceTest {
         assertThat(initQuestionList).containsAll(randomQuestionList);
         assertThat(randomQuestionList).isNotEqualTo(initQuestionList); // 아주 가끔 실패 뜰 수도 있음
     }
+
+    @Test
+    void findQuestionsById_메서드를_실행하면_Id가_일치하는_문제들만_골라_리스트를_반환한다() {
+        //given
+        List<Long> idList = new ArrayList<>();
+        idList.add(1L);
+        idList.add(3L);
+
+        //when
+        List<Question> questionList = questionService.findQuestionsById(idList);
+
+        //then
+        assertThat(initQuestionList).containsAll(questionList);
+
+        assertThat(questionList.size()).isEqualTo(2);
+
+        assertThat(questionList.get(0).getId()).isEqualTo(initQuestionList.get(0).getId());
+        assertThat(questionList.get(0).getQuestion()).isEqualTo(initQuestionList.get(0).getQuestion());
+        assertThat(questionList.get(0).getExplanation()).isEqualTo(initQuestionList.get(0).getExplanation());
+        assertThat(questionList.get(0).getOptions()).isEqualTo(initQuestionList.get(0).getOptions());
+
+        assertThat(questionList.get(1).getId()).isEqualTo(initQuestionList.get(2).getId());
+        assertThat(questionList.get(1).getQuestion()).isEqualTo(initQuestionList.get(2).getQuestion());
+        assertThat(questionList.get(1).getExplanation()).isEqualTo(initQuestionList.get(2).getExplanation());
+        assertThat(questionList.get(1).getOptions()).isEqualTo(initQuestionList.get(2).getOptions());
+    }
 }

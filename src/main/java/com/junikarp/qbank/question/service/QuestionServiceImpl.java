@@ -33,4 +33,15 @@ public class QuestionServiceImpl implements QuestionService {
                 .toList();
 
     }
+
+    @Override
+    public List<Question> findQuestionsById(List<Long> idList) {
+
+        List<Question> wholeQuestionList = questionRepository.findAll();
+
+        return  wholeQuestionList.stream()
+                .filter(question -> idList.contains(question.getId()))
+                .toList();
+    }
+
 }

@@ -6,7 +6,8 @@ import com.junikarp.qbank.question.infrastructure.QuestionEntity;
 import java.util.List;
 
 public interface QuestionService {
-
+    // 랜덤 문제 생성
     List<Question> createRandomQuestionList(int Quantity);
-    
+    // 지정된 번호 문제 가져오기
+    List<Question> findQuestionsById(List<Long> idList);
 }
