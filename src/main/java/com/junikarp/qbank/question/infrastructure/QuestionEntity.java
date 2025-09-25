@@ -1,6 +1,5 @@
 package com.junikarp.qbank.question.infrastructure;
 
-import com.junikarp.qbank.option.domain.Option;
 import com.junikarp.qbank.option.infrastructure.OptionEntity;
 import com.junikarp.qbank.question.domain.Question;
 import jakarta.persistence.*;
