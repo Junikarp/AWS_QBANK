@@ -1,2 +1,2 @@
-delete * from question;
-delete * from option;
+delete from option;
+delete from question;
