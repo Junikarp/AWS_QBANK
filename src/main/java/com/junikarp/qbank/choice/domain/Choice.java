@@ -1,11 +1,13 @@
-package com.junikarp.qbank.option.domain;
+package com.junikarp.qbank.choice.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class Option {
+@AllArgsConstructor
+public class Choice {
 
     private Long id;
 

@@ -1,16 +1,16 @@
-package com.junikarp.qbank.option.infrastructure;
+package com.junikarp.qbank.choice.infrastructure;
 
-import com.junikarp.qbank.option.domain.Option;
+import com.junikarp.qbank.choice.domain.Choice;
 import com.junikarp.qbank.question.infrastructure.QuestionEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "option")
+@Table(name = "choice")
 @Getter
 @Setter
-public class OptionEntity {
+public class ChoiceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +29,18 @@ public class OptionEntity {
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private QuestionEntity questionEntity;
 
-    public static OptionEntity from(Option option) {
-        OptionEntity optionEntity = new OptionEntity();
-        optionEntity.id = option.getId();
-        optionEntity.number = option.getNumber();
-        optionEntity.text = option.getText();
-        optionEntity.isCorrect = option.getIsCorrect();
+    public static ChoiceEntity from(Choice choice) {
+        ChoiceEntity choiceEntity = new ChoiceEntity();
+        choiceEntity.id = choice.getId();
+        choiceEntity.number = choice.getNumber();
+        choiceEntity.text = choice.getText();
+        choiceEntity.isCorrect = choice.getIsCorrect();
 
-        return optionEntity;
+        return choiceEntity;
     }
 
-    public Option to() {
-        return Option.builder()
+    public Choice to() {
+        return Choice.builder()
                 .id(id)
                 .number(number)
                 .text(text)

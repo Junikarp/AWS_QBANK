@@ -1,2 +1,2 @@
-delete from option;
+delete from choice;
 delete from question;
