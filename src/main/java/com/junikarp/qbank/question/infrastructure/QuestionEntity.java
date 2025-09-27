@@ -1,11 +1,12 @@
 package com.junikarp.qbank.question.infrastructure;
 
-import com.junikarp.qbank.option.infrastructure.OptionEntity;
+import com.junikarp.qbank.choice.infrastructure.ChoiceEntity;
 import com.junikarp.qbank.question.domain.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,19 +27,18 @@ public class QuestionEntity {
     private String explanation;
 
     @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OptionEntity> options;
-
+    private List<ChoiceEntity> choices = new ArrayList<>();
 
     public static QuestionEntity from(Question question) {
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.id = question.getId();
         questionEntity.question = question.getQuestion();
         questionEntity.explanation = question.getExplanation();
-        questionEntity.options = question.getOptions().stream()
+        questionEntity.choices = question.getChoices().stream()
                 .map(option -> {
-                    OptionEntity optionEntity = OptionEntity.from(option);
-                    optionEntity.setQuestionEntity(questionEntity);
-                    return optionEntity;
+                    ChoiceEntity choiceEntity = ChoiceEntity.from(option);
+                    choiceEntity.setQuestionEntity(questionEntity);
+                    return choiceEntity;
                 })
                 .collect(Collectors.toList());
 
@@ -50,8 +50,8 @@ public class QuestionEntity {
                 .id(id)
                 .question(question)
                 .explanation(explanation)
-                .options(options.stream()
-                        .map(OptionEntity::to)
+                .choices(choices.stream()
+                        .map(ChoiceEntity::to)
                         .collect(Collectors.toList()))
                 .build();
     }

@@ -1,13 +1,11 @@
-package com.junikarp.qbank.question.infrastructure;
+package com.junikarp.qbank.midium;
 
-import com.junikarp.qbank.question.domain.Question;
-import com.junikarp.qbank.question.service.port.QuestionRepository;
+import com.junikarp.qbank.question.infrastructure.QuestionEntity;
+import com.junikarp.qbank.question.infrastructure.QuestionJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -37,7 +35,7 @@ public class QuestionRepositoryTest {
 
         //then
         assertThat(list.get(0).getQuestion()).isEqualTo("1번 문제 입니다.");
-        assertThat(list.get(0).getOptions().size()).isEqualTo(4);
-        assertThat(list.get(0).getOptions().get(2).getIsCorrect()).isTrue();
+        assertThat(list.get(1).getChoices().size()).isEqualTo(4);
+        assertThat(list.get(0).getChoices().get(2).getIsCorrect()).isTrue();
     }
 }

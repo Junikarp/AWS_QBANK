@@ -1,6 +1,6 @@
 package com.junikarp.qbank.question.domain;
 
-import com.junikarp.qbank.option.domain.Option;
+import com.junikarp.qbank.choice.domain.Choice;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
@@ -18,6 +18,6 @@ public class Question {
     private String explanation;
 
     @Singular
-    private List<Option> options;
+    private List<Choice> choices;
 
 }
