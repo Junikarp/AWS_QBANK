@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuestionRepositoryImpl implements QuestionRepository {
 
-    private QuestionJpaRepository questionJpaRepository;
+    private final QuestionJpaRepository questionJpaRepository;
 
     public List<Question> findAll() {
         return questionJpaRepository.findAll().stream()
