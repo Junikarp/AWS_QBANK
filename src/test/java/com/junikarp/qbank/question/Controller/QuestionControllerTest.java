@@ -6,6 +6,7 @@ import com.junikarp.qbank.question.controller.response.RandomQuestionListRespons
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.mock.TestContainer;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +60,7 @@ public class QuestionControllerTest {
 
     }
 
-    @Test
+    @RepeatedTest(value = 5)
     void 사용자는_지정된_수량만큼_랜덤한_문제_리스트를_조회_할_수_있다() {
         //given
         TestContainer testContainer = TestContainer.builder()
@@ -69,23 +70,13 @@ public class QuestionControllerTest {
         testContainer.questionRepository.save(initQuestionList.get(1));
         testContainer.questionRepository.save(initQuestionList.get(2));
 
-        int randomCount = 0;
-
         //when
         ResponseEntity<RandomQuestionListResponse> result = testContainer.questionController.getRandomQuestionList(2);
 
-        for (int i = 0; i < 10; i++) {
-            // 모든 반복에서 기본적인 HTTP 응답은 성공해야 함
-            assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
-            assertThat(result.getBody()).isNotNull();
-            assertThat(result.getBody().getList().size()).isEqualTo(2);
-
-            if(result.getBody().getList().get(0).getId() != 1) {
-                randomCount++;
-            }
-        }
-
         //then
-        assertThat(randomCount).isGreaterThan(1);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getList().size()).isEqualTo(2);
+        assertThat(result.getBody().getList().get(0).getId()).isNotEqualTo(1);
     }
 }
