@@ -2,7 +2,6 @@ package com.junikarp.qbank.question.service;
 
 import com.junikarp.qbank.question.controller.port.QuestionService;
 import com.junikarp.qbank.question.domain.Question;
-import com.junikarp.qbank.question.infrastructure.QuestionEntity;
 import com.junikarp.qbank.question.service.port.QuestionRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Builder
@@ -26,7 +24,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         List<Question> wholeQuestionList = questionRepository.findAll();
 
-        Collections.shuffle(wholeQuestionList);
+        questionShuffler(wholeQuestionList);
 
         return wholeQuestionList.stream()
                 .limit(Quantity)
@@ -42,6 +40,12 @@ public class QuestionServiceImpl implements QuestionService {
         return  wholeQuestionList.stream()
                 .filter(question -> idList.contains(question.getId()))
                 .toList();
+    }
+
+    @Override
+    public List<Question> questionShuffler(List<Question> questionList) {
+        Collections.shuffle(questionList);
+        return questionList;
     }
 
 }
