@@ -1,7 +1,7 @@
 package com.junikarp.qbank.question.controller;
 
 import com.junikarp.qbank.question.controller.port.QuestionService;
-import com.junikarp.qbank.question.controller.response.QuestionResponse;
+import com.junikarp.qbank.question.controller.response.BookmarkQuestionListResponse;
 import com.junikarp.qbank.question.controller.response.RandomQuestionListResponse;
 import com.junikarp.qbank.question.domain.Question;
 import lombok.Builder;
@@ -32,5 +32,12 @@ public class QuestionController {
         return ResponseEntity
                 .ok()
                 .body(RandomQuestionListResponse.from(RandomQuestionList));
+    }
+
+    @GetMapping(value = "/bookmarked/{userId}")
+    public ResponseEntity<BookmarkQuestionListResponse> getQuestionListByUserId(@PathVariable Long userId) {
+        return ResponseEntity
+                .ok()
+                .body(BookmarkQuestionListResponse.from(questionService.findBookmarkedQuestions(userId)));
     }
 }

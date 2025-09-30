@@ -1,5 +1,8 @@
 package com.junikarp.qbank.question.service;
 
+import com.junikarp.qbank.bookmark.controller.port.BookmarkService;
+import com.junikarp.qbank.bookmark.domain.Bookmark;
+import com.junikarp.qbank.bookmark.service.port.BookmarkRepository;
 import com.junikarp.qbank.question.controller.port.QuestionService;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.service.port.QuestionRepository;
@@ -16,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
 
-    @Autowired
     private final QuestionRepository questionRepository;
+    private final BookmarkService bookmarkService;
 
     @Override
     public List<Question> createRandomQuestionList(int Quantity) {
@@ -46,6 +49,12 @@ public class QuestionServiceImpl implements QuestionService {
     public List<Question> questionShuffler(List<Question> questionList) {
         Collections.shuffle(questionList);
         return questionList;
+    }
+
+    @Override
+    public List<Question> findBookmarkedQuestions(Long userId) {
+        List<Bookmark> bookmarks = bookmarkService.findListByUserId(userId);
+        return findQuestionsById(bookmarkService.getQuestionIdList(bookmarks));
     }
 
 }

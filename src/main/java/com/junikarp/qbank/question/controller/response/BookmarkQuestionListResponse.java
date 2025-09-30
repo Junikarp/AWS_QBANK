@@ -1,6 +1,5 @@
-package com.junikarp.qbank.bookmark.controller.response;
+package com.junikarp.qbank.question.controller.response;
 
-import com.junikarp.qbank.question.controller.response.QuestionResponse;
 import com.junikarp.qbank.question.domain.Question;
 import lombok.Builder;
 import lombok.Getter;
