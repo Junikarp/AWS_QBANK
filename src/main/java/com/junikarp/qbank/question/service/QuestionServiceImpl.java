@@ -4,6 +4,7 @@ import com.junikarp.qbank.bookmark.controller.port.BookmarkService;
 import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.bookmark.service.port.BookmarkRepository;
 import com.junikarp.qbank.question.controller.port.QuestionService;
+import com.junikarp.qbank.question.controller.port.QuestionShuffler;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.service.port.QuestionRepository;
 import lombok.Builder;
@@ -21,13 +22,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final BookmarkService bookmarkService;
+    private final QuestionShuffler questionShuffler;
 
     @Override
     public List<Question> createRandomQuestionList(int Quantity) {
 
         List<Question> wholeQuestionList = questionRepository.findAll();
 
-        questionShuffler(wholeQuestionList);
+        questionShuffler.shuffle(wholeQuestionList);
 
         return wholeQuestionList.stream()
                 .limit(Quantity)
@@ -43,12 +45,6 @@ public class QuestionServiceImpl implements QuestionService {
         return  wholeQuestionList.stream()
                 .filter(question -> idList.contains(question.getId()))
                 .toList();
-    }
-
-    @Override
-    public List<Question> questionShuffler(List<Question> questionList) {
-        Collections.shuffle(questionList);
-        return questionList;
     }
 
     @Override
