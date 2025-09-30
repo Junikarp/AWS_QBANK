@@ -35,8 +35,8 @@ public class QuestionEntity {
         questionEntity.question = question.getQuestion();
         questionEntity.explanation = question.getExplanation();
         questionEntity.choices = question.getChoices().stream()
-                .map(option -> {
-                    ChoiceEntity choiceEntity = ChoiceEntity.from(option);
+                .map(choice -> {
+                    ChoiceEntity choiceEntity = ChoiceEntity.from(choice);
                     choiceEntity.setQuestionEntity(questionEntity);
                     return choiceEntity;
                 })
