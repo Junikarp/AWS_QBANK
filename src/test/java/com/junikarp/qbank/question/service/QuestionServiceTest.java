@@ -1,8 +1,10 @@
 package com.junikarp.qbank.question.service;
 
 import com.junikarp.qbank.choice.domain.Choice;
+import com.junikarp.qbank.mock.QuestionShufflerTest;
+import com.junikarp.qbank.question.controller.port.QuestionShuffler;
 import com.junikarp.qbank.question.domain.Question;
-import com.junikarp.qbank.question.mock.FakeQuestionRepository;
+import com.junikarp.qbank.mock.FakeQuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +21,11 @@ public class QuestionServiceTest {
     @BeforeEach
     void init() {
         FakeQuestionRepository fakeQuestionRepository = new FakeQuestionRepository();
+        QuestionShuffler questionShuffler = new QuestionShufflerTest();
 
         this.questionService = QuestionServiceImpl.builder()
                 .questionRepository(fakeQuestionRepository)
+                .questionShuffler(questionShuffler)
                 .build();
 
         Question question1 = Question.builder()
