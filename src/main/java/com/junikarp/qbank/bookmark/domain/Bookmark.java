@@ -15,4 +15,11 @@ public class Bookmark {
 
     private Long questionId;
 
+    public static Bookmark from(Long userId, Long questionId) {
+        return Bookmark.builder()
+                .userId(userId)
+                .questionId(questionId)
+                .build();
+    }
+
 }
