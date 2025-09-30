@@ -1,4 +1,4 @@
-package com.junikarp.qbank.question.mock;
+package com.junikarp.qbank.mock;
 
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.service.port.QuestionRepository;
