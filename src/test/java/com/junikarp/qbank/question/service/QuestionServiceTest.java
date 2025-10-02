@@ -4,6 +4,7 @@ import com.junikarp.qbank.bookmark.controller.port.BookmarkService;
 import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.bookmark.service.BookmarkServiceImpl;
 import com.junikarp.qbank.choice.domain.Choice;
+import com.junikarp.qbank.mock.FakeBookmarkRepository;
 import com.junikarp.qbank.mock.QuestionShufflerTest;
 import com.junikarp.qbank.question.controller.port.QuestionShuffler;
 import com.junikarp.qbank.question.domain.Question;
@@ -33,7 +34,7 @@ public class QuestionServiceTest {
 
     @BeforeEach
     void init() {
-        fakeQuestionRepository = new FakeQuestionRepository();
+        fakeQuestionRepository = new FakeQuestionRepository(new FakeBookmarkRepository());
         QuestionShuffler questionShuffler = new QuestionShufflerTest();
 
         this.questionService = QuestionServiceImpl.builder()
