@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class BookmarkRepositoryTest {
 
     @InjectMocks
-    private BookmarkRepositoryImpl BookmarkRepositoryImpl;
+    private BookmarkRepositoryImpl bookmarkRepositoryImpl;
     @Mock
     private BookmarkJpaRepository bookmarkJpaRepository;
 
@@ -40,13 +40,6 @@ public class BookmarkRepositoryTest {
 
     @BeforeEach
     void init() {
-        //given
-        Bookmark bookmark = Bookmark.builder()
-                .id(1L)
-                .userId(1L)
-                .questionId(1L)
-                .build();
-
         choices1 = List.of(
                 testFixtures.createChoiceEntity(1L, "A번", "A번 보기입니다.", false),
                 testFixtures.createChoiceEntity(2L, "B번", "B번 보기입니다.", true)
@@ -77,7 +70,7 @@ public class BookmarkRepositoryTest {
 
         //when
         when(bookmarkJpaRepository.save(any(BookmarkEntity.class))).thenReturn(bookmarkEntity);
-        Bookmark result = BookmarkRepositoryImpl.save(bookmark);
+        Bookmark result = bookmarkRepositoryImpl.save(bookmark);
 
         //then
         assertThat(result.getId()).isEqualTo(1L);
@@ -115,7 +108,7 @@ public class BookmarkRepositoryTest {
 
         //when
         when(bookmarkJpaRepository.findByUserEntityId(userId)).thenReturn(bookmarkEntityList);
-        List<Bookmark> result = BookmarkRepositoryImpl.findByUserId(1L);
+        List<Bookmark> result = bookmarkRepositoryImpl.findByUserId(userId);
 
         //then
         assertThat(result.size()).isEqualTo(2);
@@ -126,10 +119,17 @@ public class BookmarkRepositoryTest {
 
         verify(bookmarkJpaRepository).findByUserEntityId(userId);
     }
-/* TODO
-    @Override
-    public void delete(Long userId, Long questionId) {
-        bookmarkJpaRepository.deleteByUserEntityIdAndQuestionEntityId(userId, questionId);
+
+    @Test
+    void delete_메서드는_JpaRepository의_delete_메서드를_호출한다() {
+        //given
+        Long userId = 1L;
+        Long questionId = 1L;
+
+        //when
+        bookmarkRepositoryImpl.delete(userId, questionId);
+
+        //then
+        verify(bookmarkJpaRepository).deleteByUserEntityIdAndQuestionEntityId(userId, questionId);
     }
-*/
 }
