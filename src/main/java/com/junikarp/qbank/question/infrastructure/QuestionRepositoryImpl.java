@@ -25,4 +25,11 @@ public class QuestionRepositoryImpl implements QuestionRepository {
     public Question save(Question question) {
         return questionJpaRepository.save(QuestionEntity.from(question)).to();
     }
+
+    @Override
+    public List<Question> findBookmarkedQuestionsByUserId(Long userId) {
+        return questionJpaRepository.findBookmarkedQuestionsByUserId(userId).stream()
+                .map(QuestionEntity::to)
+                .collect(Collectors.toList());
+    }
 }
