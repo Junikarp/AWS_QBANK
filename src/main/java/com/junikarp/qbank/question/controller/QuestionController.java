@@ -35,7 +35,7 @@ public class QuestionController {
     }
 
     @GetMapping(value = "/bookmarked/{userId}")
-    public ResponseEntity<BookmarkQuestionListResponse> getQuestionListByUserId(@PathVariable Long userId) {
+    public ResponseEntity<BookmarkQuestionListResponse> getBookmarkQuestionListByUserId(@PathVariable Long userId) {
         return ResponseEntity
                 .ok()
                 .body(BookmarkQuestionListResponse.from(questionService.findBookmarkedQuestions(userId)));
