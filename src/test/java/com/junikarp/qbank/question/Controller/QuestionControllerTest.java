@@ -1,6 +1,9 @@
 package com.junikarp.qbank.question.Controller;
 
+import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.choice.domain.Choice;
+import com.junikarp.qbank.mock.FakeQuestionRepository;
+import com.junikarp.qbank.question.controller.response.BookmarkQuestionListResponse;
 import com.junikarp.qbank.question.controller.response.RandomQuestionListResponse;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.mock.TestContainer;
@@ -51,7 +54,7 @@ public class QuestionControllerTest {
                 .choice(new Choice(12L,"D","D번 보기입니다.",false,3L))
                 .build();
 
-        initQuestionList = new ArrayList<Question>();
+        initQuestionList = new ArrayList<>();
         initQuestionList.add(question1);
         initQuestionList.add(question2);
         initQuestionList.add(question3);
@@ -75,5 +78,38 @@ public class QuestionControllerTest {
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().getList().size()).isEqualTo(2);
         assertThat(result.getBody().getList().get(0).getId()).isEqualTo(1);
+    }
+
+    @Test
+    void 사용자는_북마크한_문제리스트를_조회_할_수_있다() {
+        //given
+        TestContainer testContainer = TestContainer.builder()
+                .build();
+
+        Long userId = 1L;
+
+        Bookmark bookmark1 = Bookmark.builder()
+                .userId(userId)
+                .questionId(initQuestionList.get(0).getId())
+                .build();
+
+        Bookmark bookmark2 = Bookmark.builder()
+                .userId(userId)
+                .questionId(initQuestionList.get(1).getId())
+                .build();
+
+        testContainer.questionRepository.save(initQuestionList.get(0));
+        testContainer.questionRepository.save(initQuestionList.get(1));
+        testContainer.questionRepository.save(initQuestionList.get(2));
+
+        testContainer.bookmarkRepository.save(bookmark1);
+        testContainer.bookmarkRepository.save(bookmark2);
+
+        //when
+        ResponseEntity<BookmarkQuestionListResponse> result = testContainer.questionController.getBookmarkQuestionListByUserId(userId);
+
+        //then
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getList().size()).isEqualTo(2);
     }
 }
