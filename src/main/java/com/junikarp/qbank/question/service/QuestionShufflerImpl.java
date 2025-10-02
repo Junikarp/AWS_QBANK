@@ -15,5 +15,4 @@ public class QuestionShufflerImpl implements QuestionShuffler {
         Collections.shuffle(questionList);
         return questionList;
     }
-
 }
