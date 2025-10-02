@@ -2,6 +2,7 @@ package com.junikarp.qbank.mock;
 
 import com.junikarp.qbank.choice.infrastructure.ChoiceEntity;
 import com.junikarp.qbank.question.infrastructure.QuestionEntity;
+import com.junikarp.qbank.user.infrastructure.UserEntity;
 
 import java.util.List;
 
@@ -28,4 +29,9 @@ public class TestFixtures {
         return question;
     }
 
+    public UserEntity createUserEntity() {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        return userEntity;
+    }
 }
