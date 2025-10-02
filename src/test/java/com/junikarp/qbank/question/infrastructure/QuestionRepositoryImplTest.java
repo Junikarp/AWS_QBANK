@@ -2,6 +2,7 @@ package com.junikarp.qbank.question.infrastructure;
 
 import com.junikarp.qbank.choice.domain.Choice;
 import com.junikarp.qbank.choice.infrastructure.ChoiceEntity;
+import com.junikarp.qbank.mock.TestFixtures;
 import com.junikarp.qbank.question.domain.Question;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,26 +26,7 @@ class QuestionRepositoryImplTest {
     @InjectMocks
     private QuestionRepositoryImpl questionRepositoryImpl;
 
-    // 테스트를 위한 ChoiceEntity 객체 생성
-    private ChoiceEntity createChoiceEntity(Long id, String number, String text, Boolean isCorrect) {
-        ChoiceEntity choice = new ChoiceEntity();
-        choice.setId(id);
-        choice.setNumber(number);
-        choice.setText(text);
-        choice.setIsCorrect(isCorrect);
-        return choice;
-    }
-
-    // 테스트를 위한 QuestionEntity 객체 생성
-    private QuestionEntity createQuestionEntity(Long id, String questionText, String explanation, List<ChoiceEntity> choices) {
-        QuestionEntity question = new QuestionEntity();
-        question.setId(id);
-        question.setQuestion(questionText);
-        question.setExplanation(explanation);
-        question.setChoices(choices);
-        choices.forEach(choiceEntity -> choiceEntity.setQuestionEntity(question));
-        return question;
-    }
+    TestFixtures testFixtures = new TestFixtures();
 
     @Test
     void findAll_메서드는_전체_문제_리스트를_도메인_엔티티로_변환_후_반환한다() {
@@ -52,16 +34,16 @@ class QuestionRepositoryImplTest {
         List<QuestionEntity> questions = new ArrayList<>();
 
         List<ChoiceEntity> choices1 = List.of(
-                createChoiceEntity(1L, "A번", "A번 보기입니다.", false),
-                createChoiceEntity(2L, "B번", "B번 보기입니다.", true)
+                testFixtures.createChoiceEntity(1L, "A번", "A번 보기입니다.", false),
+                testFixtures.createChoiceEntity(2L, "B번", "B번 보기입니다.", true)
         );
         List<ChoiceEntity> choices2 = List.of(
-                createChoiceEntity(3L, "A번", "A번 보기입니다.", true),
-                createChoiceEntity(4L, "B번", "B번 보기입니다.", false)
+                testFixtures.createChoiceEntity(3L, "A번", "A번 보기입니다.", true),
+                testFixtures.createChoiceEntity(4L, "B번", "B번 보기입니다.", false)
         );
 
-        QuestionEntity questionEntity1 = createQuestionEntity(1L, "1번 문제입니다", "1번 문제 해설입니다", choices1);
-        QuestionEntity questionEntity2 = createQuestionEntity(2L, "2번 문제입니다", "2번 문제 해설입니다", choices2);
+        QuestionEntity questionEntity1 = testFixtures.createQuestionEntity(1L, "1번 문제입니다", "1번 문제 해설입니다", choices1);
+        QuestionEntity questionEntity2 = testFixtures.createQuestionEntity(2L, "2번 문제입니다", "2번 문제 해설입니다", choices2);
 
         questions.add(questionEntity1);
         questions.add(questionEntity2);
@@ -106,5 +88,43 @@ class QuestionRepositoryImplTest {
 
         verify(questionJpaRepository).save(any(QuestionEntity.class));
 
+    }
+
+    @Test
+    void findBookmarkedQuestionsByUserId_메서드는_유저아이디로_북마크한_문제를_불러올_수_있다() {
+        //given
+        Long userId = 1L;
+
+        List<QuestionEntity> questions = new ArrayList<>();
+
+        List<ChoiceEntity> choices1 = List.of(
+                testFixtures.createChoiceEntity(1L, "A번", "A번 보기입니다.", false),
+                testFixtures.createChoiceEntity(2L, "B번", "B번 보기입니다.", true)
+        );
+        List<ChoiceEntity> choices2 = List.of(
+                testFixtures.createChoiceEntity(3L, "A번", "A번 보기입니다.", true),
+                testFixtures.createChoiceEntity(4L, "B번", "B번 보기입니다.", false),
+                testFixtures.createChoiceEntity(5L, "C번", "C번 보기입니다.", false)
+        );
+
+        QuestionEntity questionEntity1 = testFixtures.createQuestionEntity(1L, "1번 문제입니다", "1번 문제 해설입니다", choices1);
+        QuestionEntity questionEntity2 = testFixtures.createQuestionEntity(2L, "2번 문제입니다", "2번 문제 해설입니다", choices2);
+
+        questions.add(questionEntity1);
+        questions.add(questionEntity2);
+
+        //when
+        when(questionJpaRepository.findBookmarkedQuestionsByUserId(any(Long.class))).thenReturn(questions);
+        List<Question> result = questionRepositoryImpl.findBookmarkedQuestionsByUserId(userId);
+
+
+        //then
+        assertThat(result.get(0).getId()).isEqualTo(1L);
+        assertThat(result.get(0).getQuestion()).isEqualTo("1번 문제입니다");
+        assertThat(result.get(1).getExplanation()).isEqualTo("2번 문제 해설입니다");
+        assertThat(result.get(0).getChoices().size()).isEqualTo(2);
+        assertThat(result.get(1).getChoices().size()).isEqualTo(3);
+
+        verify(questionJpaRepository).findBookmarkedQuestionsByUserId(any(Long.class));
     }
 }
