@@ -16,3 +16,10 @@ VALUES (1, 'A', 'A번 보기입니다.', false, 1),
        (10, 'B', 'B번 보기입니다.', true, 3),
        (11, 'C', 'C번 보기입니다.', false, 3),
        (12, 'D', 'D번 보기입니다.', false, 3);
+
+INSERT INTO users(id)
+VALUES(1);
+
+INSERT INTO bookmark(id, user_id, question_id)
+VALUES (1, 1, 1),
+       (2, 1, 3);
