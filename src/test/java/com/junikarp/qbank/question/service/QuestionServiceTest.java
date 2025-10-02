@@ -1,5 +1,8 @@
 package com.junikarp.qbank.question.service;
 
+import com.junikarp.qbank.bookmark.controller.port.BookmarkService;
+import com.junikarp.qbank.bookmark.domain.Bookmark;
+import com.junikarp.qbank.bookmark.service.BookmarkServiceImpl;
 import com.junikarp.qbank.choice.domain.Choice;
 import com.junikarp.qbank.mock.QuestionShufflerTest;
 import com.junikarp.qbank.question.controller.port.QuestionShuffler;
@@ -7,20 +10,30 @@ import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.mock.FakeQuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class QuestionServiceTest {
 
     private QuestionServiceImpl questionService;
     private List<Question> initQuestionList;
+    FakeQuestionRepository fakeQuestionRepository;
+
+
+    @InjectMocks
+    private BookmarkServiceImpl bookmarkService;
 
     @BeforeEach
     void init() {
-        FakeQuestionRepository fakeQuestionRepository = new FakeQuestionRepository();
+        fakeQuestionRepository = new FakeQuestionRepository();
         QuestionShuffler questionShuffler = new QuestionShufflerTest();
 
         this.questionService = QuestionServiceImpl.builder()
@@ -62,7 +75,7 @@ public class QuestionServiceTest {
         fakeQuestionRepository.save(question2);
         fakeQuestionRepository.save(question3);
 
-        initQuestionList = new ArrayList<Question>();
+        initQuestionList = new ArrayList<>();
         initQuestionList.add(question1);
         initQuestionList.add(question2);
         initQuestionList.add(question3);
@@ -75,12 +88,12 @@ public class QuestionServiceTest {
         int quantity = 2;
 
         //when
-        List<Question> randomQuestionList = questionService.createRandomQuestionList(quantity);
+        List<Question> result = questionService.createRandomQuestionList(quantity);
 
         //then
-        assertThat(randomQuestionList.size()).isEqualTo(quantity);
-        assertThat(initQuestionList).containsAll(randomQuestionList);
-        assertThat(randomQuestionList).isNotEqualTo(initQuestionList); // 아주 가끔 실패 뜰 수도 있음
+        assertThat(result.size()).isEqualTo(quantity);
+        assertThat(initQuestionList).containsAll(result);
+        assertThat(result).isNotEqualTo(initQuestionList);
     }
 
     @Test
@@ -91,21 +104,39 @@ public class QuestionServiceTest {
         idList.add(3L);
 
         //when
-        List<Question> questionList = questionService.findQuestionsById(idList);
+        List<Question> result = questionService.findQuestionsById(idList);
 
         //then
-        assertThat(initQuestionList).containsAll(questionList);
+        assertThat(initQuestionList).containsAll(result);
 
-        assertThat(questionList.size()).isEqualTo(2);
+        assertThat(result.size()).isEqualTo(2);
 
-        assertThat(questionList.get(0).getId()).isEqualTo(initQuestionList.get(0).getId());
-        assertThat(questionList.get(0).getQuestion()).isEqualTo(initQuestionList.get(0).getQuestion());
-        assertThat(questionList.get(0).getExplanation()).isEqualTo(initQuestionList.get(0).getExplanation());
-        assertThat(questionList.get(0).getChoices()).isEqualTo(initQuestionList.get(0).getChoices());
+        assertThat(result.get(0).getId()).isEqualTo(initQuestionList.get(0).getId());
+        assertThat(result.get(0).getQuestion()).isEqualTo(initQuestionList.get(0).getQuestion());
+        assertThat(result.get(0).getExplanation()).isEqualTo(initQuestionList.get(0).getExplanation());
+        assertThat(result.get(0).getChoices()).isEqualTo(initQuestionList.get(0).getChoices());
 
-        assertThat(questionList.get(1).getId()).isEqualTo(initQuestionList.get(2).getId());
-        assertThat(questionList.get(1).getQuestion()).isEqualTo(initQuestionList.get(2).getQuestion());
-        assertThat(questionList.get(1).getExplanation()).isEqualTo(initQuestionList.get(2).getExplanation());
-        assertThat(questionList.get(1).getChoices()).isEqualTo(initQuestionList.get(2).getChoices());
+        assertThat(result.get(1).getId()).isEqualTo(initQuestionList.get(2).getId());
+        assertThat(result.get(1).getQuestion()).isEqualTo(initQuestionList.get(2).getQuestion());
+        assertThat(result.get(1).getExplanation()).isEqualTo(initQuestionList.get(2).getExplanation());
+        assertThat(result.get(1).getChoices()).isEqualTo(initQuestionList.get(2).getChoices());
+    }
+
+    @Test
+    void userId를_이용해_북마크한_문제_리스트를_가져올_수_있다(){
+        //given
+        Long userId = 1L;
+
+        fakeQuestionRepository.addBookmark(1L, 1L);
+        fakeQuestionRepository.addBookmark(1L, 3L);
+
+        //when
+        List<Question> result = questionService.findBookmarkedQuestions(userId);
+
+        //then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getId()).isEqualTo(1);
+        assertThat(result.get(0).getExplanation()).isEqualTo("1번 문제에 대한 설명입니다.");
+        assertThat(result.get(1).getExplanation()).isEqualTo("3번 문제에 대한 설명입니다.");
     }
 }
