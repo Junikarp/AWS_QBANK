@@ -21,7 +21,6 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final BookmarkService bookmarkService;
     private final QuestionShuffler questionShuffler;
 
     @Override
@@ -49,8 +48,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> findBookmarkedQuestions(Long userId) {
-        List<Bookmark> bookmarks = bookmarkService.findListByUserId(userId);
-        return findQuestionsById(bookmarkService.getQuestionIdList(bookmarks));
+        return questionRepository.findBookmarkedQuestionsByUserId(userId);
     }
 
 }
