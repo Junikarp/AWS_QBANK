@@ -4,9 +4,9 @@ import com.junikarp.qbank.bookmark.controller.port.BookmarkService;
 import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.bookmark.service.port.BookmarkRepository;
 import com.junikarp.qbank.question.domain.Question;
-import com.junikarp.qbank.question.infrastructure.QuestionJpaRepository;
+import com.junikarp.qbank.question.service.port.QuestionRepository;
 import com.junikarp.qbank.user.domain.User;
-import com.junikarp.qbank.user.infrastructure.UserJpaRepository;
+import com.junikarp.qbank.user.service.port.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,9 @@ import java.util.List;
 @Builder
 public class BookmarkServiceImpl implements BookmarkService {
 
-    private final QuestionJpaRepository questionJpaRepository;
-    private final UserJpaRepository userJpaRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<Bookmark> findListByUserId(Long userId) {
@@ -30,12 +30,10 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public Bookmark create(Long userId, Long questionId) {
-        User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"))
-                .to();
-        Question question = questionJpaRepository.findById(questionId)
-                .orElseThrow(() -> new EntityNotFoundException("Question not found"))
-                .to();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("Question not found"));
         Bookmark bookmark = Bookmark.from(user, question);
         return bookmarkRepository.save(bookmark);
     }
