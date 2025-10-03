@@ -31,10 +31,6 @@ public class BookmarkRepositoryTest {
     private BookmarkRepositoryImpl bookmarkRepositoryImpl;
     @Mock
     private BookmarkJpaRepository bookmarkJpaRepository;
-    @Mock
-    private UserJpaRepository userJpaRepository;
-    @Mock
-    private QuestionJpaRepository questionJpaRepository;
 
     TestFixtures testFixtures = new TestFixtures();
     UserEntity userEntity;
