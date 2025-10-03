@@ -9,6 +9,7 @@ import com.junikarp.qbank.mock.QuestionShufflerTest;
 import com.junikarp.qbank.question.controller.port.QuestionShuffler;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.mock.FakeQuestionRepository;
+import com.junikarp.qbank.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -128,8 +129,12 @@ public class QuestionServiceTest {
         //given
         Long userId = 1L;
 
-        fakeQuestionRepository.addBookmark(1L, 1L);
-        fakeQuestionRepository.addBookmark(1L, 3L);
+        User user = User.builder()
+                .id(userId)
+                .build();
+
+        fakeQuestionRepository.addBookmark(user, initQuestionList.get(0));
+        fakeQuestionRepository.addBookmark(user, initQuestionList.get(2));
 
         //when
         List<Question> result = questionService.findBookmarkedQuestions(userId);

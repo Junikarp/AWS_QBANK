@@ -7,6 +7,7 @@ import com.junikarp.qbank.question.controller.response.BookmarkQuestionListRespo
 import com.junikarp.qbank.question.controller.response.RandomQuestionListResponse;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.mock.TestContainer;
+import com.junikarp.qbank.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -88,14 +89,18 @@ public class QuestionControllerTest {
 
         Long userId = 1L;
 
+        User user = User.builder()
+                .id(userId)
+                .build();
+
         Bookmark bookmark1 = Bookmark.builder()
-                .userId(userId)
-                .questionId(initQuestionList.get(0).getId())
+                .user(user)
+                .question(initQuestionList.get(0))
                 .build();
 
         Bookmark bookmark2 = Bookmark.builder()
-                .userId(userId)
-                .questionId(initQuestionList.get(1).getId())
+                .user(user)
+                .question(initQuestionList.get(1))
                 .build();
 
         testContainer.questionRepository.save(initQuestionList.get(0));

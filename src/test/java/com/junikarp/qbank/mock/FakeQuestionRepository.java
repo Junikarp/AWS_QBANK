@@ -3,6 +3,7 @@ package com.junikarp.qbank.mock;
 import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.service.port.QuestionRepository;
+import com.junikarp.qbank.user.domain.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,10 +22,10 @@ public class FakeQuestionRepository implements QuestionRepository {
         this.fakeBookmarkRepository = fakeBookmarkRepository;
     }
 
-    public void addBookmark(Long userId, Long questionId) {
+    public void addBookmark(User user, Question question) {
         Bookmark bookmark = Bookmark.builder()
-                .userId(userId)
-                .questionId(questionId)
+                .user(user)
+                .question(question)
                 .build();
         fakeBookmarkRepository.save(bookmark);
     }
@@ -55,12 +56,12 @@ public class FakeQuestionRepository implements QuestionRepository {
 
     @Override
     public List<Question> findBookmarkedQuestionsByUserId(Long userId) {
-        List<Long> questionIdList = fakeBookmarkRepository.getData().stream()
-                .filter(bookmark -> bookmark.getUserId().equals(userId))
-                .map(Bookmark::getQuestionId)
+        List<Question> questionList = fakeBookmarkRepository.getData().stream()
+                .filter(bookmark -> bookmark.getUser().getId().equals(userId))
+                .map(Bookmark::getQuestion)
                 .toList();
         return data.stream()
-                .filter(question -> questionIdList.contains(question.getId()))
+                .filter(questionList::contains)
                 .collect(Collectors.toList());
     }
 

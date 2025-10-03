@@ -7,7 +7,9 @@ import com.junikarp.qbank.bookmark.infrastructure.BookmarkRepositoryImpl;
 import com.junikarp.qbank.choice.infrastructure.ChoiceEntity;
 import com.junikarp.qbank.mock.TestFixtures;
 import com.junikarp.qbank.question.infrastructure.QuestionEntity;
+import com.junikarp.qbank.question.infrastructure.QuestionJpaRepository;
 import com.junikarp.qbank.user.infrastructure.UserEntity;
+import com.junikarp.qbank.user.infrastructure.UserJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.awt.print.Book;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +31,10 @@ public class BookmarkRepositoryTest {
     private BookmarkRepositoryImpl bookmarkRepositoryImpl;
     @Mock
     private BookmarkJpaRepository bookmarkJpaRepository;
+    @Mock
+    private UserJpaRepository userJpaRepository;
+    @Mock
+    private QuestionJpaRepository questionJpaRepository;
 
     TestFixtures testFixtures = new TestFixtures();
     UserEntity userEntity;
@@ -60,13 +65,11 @@ public class BookmarkRepositoryTest {
         //given
         Bookmark bookmark = Bookmark.builder()
                 .id(1L)
-                .userId(1L)
-                .questionId(1L)
+                .user(userEntity.to())
+                .question(questionEntity1.to())
                 .build();
 
         BookmarkEntity bookmarkEntity = BookmarkEntity.from(bookmark);
-        bookmarkEntity.setQuestionEntity(questionEntity1);
-        bookmarkEntity.setUserEntity(userEntity);
 
         //when
         when(bookmarkJpaRepository.save(any(BookmarkEntity.class))).thenReturn(bookmarkEntity);
@@ -74,8 +77,8 @@ public class BookmarkRepositoryTest {
 
         //then
         assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getUserId()).isEqualTo(1L);
-        assertThat(result.getQuestionId()).isEqualTo(1L);
+        assertThat(result.getUser().getId()).isEqualTo(1L);
+        assertThat(result.getQuestion().getId()).isEqualTo(1L);
 
         verify(bookmarkJpaRepository).save(any(BookmarkEntity.class));
     }
@@ -87,22 +90,17 @@ public class BookmarkRepositoryTest {
 
         Bookmark bookmark1 = Bookmark.builder()
                 .id(1L)
-                .userId(1L)
-                .questionId(1L)
+                .user(userEntity.to())
+                .question(questionEntity1.to())
                 .build();
         Bookmark bookmark2 = Bookmark.builder()
                 .id(1L)
-                .userId(1L)
-                .questionId(1L)
+                .user(userEntity.to())
+                .question(questionEntity2.to())
                 .build();
 
         BookmarkEntity bookmarkEntity1 = BookmarkEntity.from(bookmark1);
-        bookmarkEntity1.setQuestionEntity(questionEntity1);
-        bookmarkEntity1.setUserEntity(userEntity);
-
         BookmarkEntity bookmarkEntity2 = BookmarkEntity.from(bookmark2);
-        bookmarkEntity2.setQuestionEntity(questionEntity2);
-        bookmarkEntity2.setUserEntity(userEntity);
 
         List<BookmarkEntity> bookmarkEntityList = List.of(bookmarkEntity1, bookmarkEntity2);
 
@@ -112,10 +110,10 @@ public class BookmarkRepositoryTest {
 
         //then
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0).getUserId()).isEqualTo(1L);
-        assertThat(result.get(1).getUserId()).isEqualTo(1L);
-        assertThat(result.get(0).getQuestionId()).isEqualTo(1L);
-        assertThat(result.get(1).getQuestionId()).isEqualTo(2L);
+        assertThat(result.get(0).getUser().getId()).isEqualTo(1L);
+        assertThat(result.get(1).getUser().getId()).isEqualTo(1L);
+        assertThat(result.get(0).getQuestion().getId()).isEqualTo(1L);
+        assertThat(result.get(1).getQuestion().getId()).isEqualTo(2L);
 
         verify(bookmarkJpaRepository).findByUserEntityId(userId);
     }
