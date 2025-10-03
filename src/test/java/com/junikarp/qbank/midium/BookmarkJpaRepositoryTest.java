@@ -1,7 +1,10 @@
 package com.junikarp.qbank.midium;
 
+import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.bookmark.infrastructure.BookmarkEntity;
 import com.junikarp.qbank.bookmark.infrastructure.BookmarkJpaRepository;
+import com.junikarp.qbank.question.domain.Question;
+import com.junikarp.qbank.user.domain.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +61,27 @@ public class BookmarkJpaRepositoryTest {
         assertThat(result.get(0).getQuestionEntity().getId()).isEqualTo(3);
     }
 
+    @Test
+    void 북마크를_저장할_수_있다(){
+        //given
+        User user = User.builder()
+                .id(1L)
+                .build();
+        Question question = Question.builder()
+                .id(2L)
+                .build();
+        Bookmark bookmark = Bookmark.builder()
+                .id(2L)
+                .user(user)
+                .question(question)
+                .build();
+
+        //when
+        BookmarkEntity result = bookmarkJpaRepository.save(BookmarkEntity.from(bookmark));
+
+        //then
+        assertThat(result.getId()).isEqualTo(2L);
+        assertThat(result.getUserEntity().getId()).isEqualTo(1L);
+        assertThat(result.getQuestionEntity().getId()).isEqualTo(2L);
+    }
 }
