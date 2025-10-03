@@ -1,6 +1,7 @@
 package com.junikarp.qbank.bookmark.controller.port;
 
 import com.junikarp.qbank.bookmark.domain.Bookmark;
+import com.junikarp.qbank.question.domain.Question;
 
 import java.util.List;
 
@@ -19,6 +20,6 @@ public interface BookmarkService {
     void delete(Long userId, Long questionId);
 
     // 문제 아이디 리스트 추출
-    List<Long> getQuestionIdList(List<Bookmark> list);
+    List<Question> getQuestionList(List<Bookmark> list);
 
 }

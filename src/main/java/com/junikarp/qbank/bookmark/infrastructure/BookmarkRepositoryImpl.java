@@ -2,10 +2,17 @@ package com.junikarp.qbank.bookmark.infrastructure;
 
 import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.bookmark.service.port.BookmarkRepository;
+import com.junikarp.qbank.question.infrastructure.QuestionEntity;
+import com.junikarp.qbank.question.infrastructure.QuestionJpaRepository;
+import com.junikarp.qbank.question.service.port.QuestionRepository;
+import com.junikarp.qbank.user.infrastructure.UserEntity;
+import com.junikarp.qbank.user.infrastructure.UserJpaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository

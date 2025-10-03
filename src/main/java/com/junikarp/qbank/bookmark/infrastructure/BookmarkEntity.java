@@ -7,8 +7,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.print.Book;
-
 @Getter
 @Setter
 @Entity
@@ -30,25 +28,18 @@ public class BookmarkEntity {
     private QuestionEntity questionEntity;
 
     public static BookmarkEntity from(Bookmark bookmark) {
-
         BookmarkEntity bookmarkEntity = new BookmarkEntity();
         bookmarkEntity.id = bookmark.getId();
-
+        bookmarkEntity.setUserEntity(UserEntity.from(bookmark.getUser()));
+        bookmarkEntity.setQuestionEntity(QuestionEntity.from(bookmark.getQuestion()));
         return bookmarkEntity;
     }
 
     public Bookmark to() {
         return Bookmark.builder()
                 .id(id)
-                .userId(userEntity.getId())
-                .questionId(questionEntity.getId())
+                .user(userEntity.to())
+                .question(questionEntity.to())
                 .build();
-    }
-
-    public BookmarkEntity create(UserEntity userEntity, QuestionEntity questionEntity) {
-        BookmarkEntity bookmarkEntity = new BookmarkEntity();
-        bookmarkEntity.setUserEntity(userEntity);
-        bookmarkEntity.setQuestionEntity(questionEntity);
-        return bookmarkEntity;
     }
 }

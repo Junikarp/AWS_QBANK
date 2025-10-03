@@ -14,8 +14,8 @@ public class BookmarkResponse {
     public static BookmarkResponse from(Bookmark bookmark) {
         return BookmarkResponse.builder()
                 .id(bookmark.getId())
-                .userId(bookmark.getUserId())
-                .questionId(bookmark.getQuestionId())
+                .userId(bookmark.getUser().getId())
+                .questionId(bookmark.getQuestion().getId())
                 .build();
     }
 }

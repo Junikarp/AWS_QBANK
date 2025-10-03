@@ -3,6 +3,11 @@ package com.junikarp.qbank.bookmark.service;
 import com.junikarp.qbank.bookmark.controller.port.BookmarkService;
 import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.bookmark.service.port.BookmarkRepository;
+import com.junikarp.qbank.question.domain.Question;
+import com.junikarp.qbank.question.infrastructure.QuestionJpaRepository;
+import com.junikarp.qbank.user.domain.User;
+import com.junikarp.qbank.user.infrastructure.UserJpaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +19,8 @@ import java.util.List;
 @Builder
 public class BookmarkServiceImpl implements BookmarkService {
 
+    private final QuestionJpaRepository questionJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     private final BookmarkRepository bookmarkRepository;
 
     @Override
@@ -23,7 +30,13 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public Bookmark create(Long userId, Long questionId) {
-        Bookmark bookmark = Bookmark.from(userId, questionId);
+        User user = userJpaRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"))
+                .to();
+        Question question = questionJpaRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("Question not found"))
+                .to();
+        Bookmark bookmark = Bookmark.from(user, question);
         return bookmarkRepository.save(bookmark);
     }
 
@@ -34,9 +47,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public List<Long> getQuestionIdList(List<Bookmark> list) {
+    public List<Question> getQuestionList(List<Bookmark> list) {
         return list.stream()
-                .map(Bookmark::getQuestionId)
+                .map(Bookmark::getQuestion)
                 .toList();
     }
 }

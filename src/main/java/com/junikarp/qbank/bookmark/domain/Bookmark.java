@@ -1,5 +1,7 @@
 package com.junikarp.qbank.bookmark.domain;
 
+import com.junikarp.qbank.question.domain.Question;
+import com.junikarp.qbank.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,15 +13,14 @@ public class Bookmark {
 
     private Long id;
 
-    private Long userId;
+    private User user;
 
-    private Long questionId;
+    private Question question;
 
-    public static Bookmark from(Long userId, Long questionId) {
+    public static Bookmark from(User user, Question question) {
         return Bookmark.builder()
-                .userId(userId)
-                .questionId(questionId)
+                .user(user)
+                .question(question)
                 .build();
     }
-
 }
