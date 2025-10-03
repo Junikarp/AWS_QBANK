@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -31,5 +32,10 @@ public class QuestionRepositoryImpl implements QuestionRepository {
         return questionJpaRepository.findBookmarkedQuestionsByUserId(userId).stream()
                 .map(QuestionEntity::to)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Question> findById(Long id) {
+        return questionJpaRepository.findById(id).map(QuestionEntity::to);
     }
 }

@@ -5,6 +5,7 @@ import com.junikarp.qbank.question.infrastructure.QuestionEntity;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestionRepository {
 
@@ -13,5 +14,7 @@ public interface QuestionRepository {
     List<Question> findAll();
 
     List<Question> findBookmarkedQuestionsByUserId(Long userId);
+
+    Optional<Question> findById(Long id);
 
 }

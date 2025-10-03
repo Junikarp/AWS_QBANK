@@ -12,4 +12,6 @@ public interface QuestionService {
     List<Question> findQuestionsById(List<Long> idList);
     // 북마크된 문제 리스트 가져오기
     List<Question> findBookmarkedQuestions(Long userId);
+
+    Question getById(Long id);
 }

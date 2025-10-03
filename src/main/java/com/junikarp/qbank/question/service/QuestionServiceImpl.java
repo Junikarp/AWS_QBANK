@@ -7,6 +7,7 @@ import com.junikarp.qbank.question.controller.port.QuestionService;
 import com.junikarp.qbank.question.controller.port.QuestionShuffler;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.service.port.QuestionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,4 +52,9 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.findBookmarkedQuestionsByUserId(userId);
     }
 
+    @Override
+    public Question getById(Long id) {
+        return questionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Question not Found"));
+    }
 }
