@@ -142,4 +142,20 @@ public class QuestionServiceTest {
         assertThat(result.get(0).getExplanation()).isEqualTo("1번 문제에 대한 설명입니다.");
         assertThat(result.get(1).getExplanation()).isEqualTo("3번 문제에 대한 설명입니다.");
     }
+
+    @Test
+    void getById를_이용해_문제아이디로_문제를_조회할_수_있다() {
+        //given
+        Long questionId = 2L;
+
+        //when
+        Question result = questionService.getById(questionId);
+
+        //then
+        assertThat(result.getId()).isEqualTo(2L);
+        assertThat(result.getQuestion()).isEqualTo("2번 문제 입니다.");
+        assertThat(result.getExplanation()).isEqualTo("2번 문제에 대한 설명입니다.");
+        assertThat(result.getChoices().size()).isEqualTo(4);
+        assertThat(result.getChoices().get(1).getText()).isEqualTo("B번 보기입니다.");
+    }
 }

@@ -2,22 +2,22 @@ package com.junikarp.qbank.question.Controller;
 
 import com.junikarp.qbank.bookmark.domain.Bookmark;
 import com.junikarp.qbank.choice.domain.Choice;
-import com.junikarp.qbank.mock.FakeQuestionRepository;
 import com.junikarp.qbank.question.controller.response.BookmarkQuestionListResponse;
+import com.junikarp.qbank.question.controller.response.QuestionResponse;
 import com.junikarp.qbank.question.controller.response.RandomQuestionListResponse;
 import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.mock.TestContainer;
 import com.junikarp.qbank.user.domain.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class QuestionControllerTest {
 
@@ -116,5 +116,43 @@ public class QuestionControllerTest {
         //then
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().getList().size()).isEqualTo(2);
+    }
+
+    @Test
+    void 사용자는_문제를_조회할_수_있다() {
+        //given
+        TestContainer testContainer = TestContainer.builder()
+                .build();
+
+        testContainer.questionRepository.save(initQuestionList.get(0));
+        testContainer.questionRepository.save(initQuestionList.get(1));
+
+        Long questionId = 1L;
+
+        //when
+        ResponseEntity<QuestionResponse> result = testContainer.questionController.getQuestionById(questionId);
+
+        //then
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getId()).isEqualTo(questionId);
+        assertThat(result.getBody().getQuestion()).isEqualTo("1번 문제 입니다.");
+        assertThat(result.getBody().getExplanation()).isEqualTo("1번 문제에 대한 설명입니다.");
+        assertThat(result.getBody().getChoices().size()).isEqualTo(4);
+    }
+
+    @Test
+    void 사용자가_존재하지_않는_문제아이디로_문제를_조회할_떄_오류가_발생한다() {
+        //given
+        TestContainer testContainer = TestContainer.builder()
+                .build();
+
+        Long questionId = 111L;
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> {
+            testContainer.questionController.getQuestionById(questionId);
+        }).isInstanceOf(EntityNotFoundException.class);
     }
 }
