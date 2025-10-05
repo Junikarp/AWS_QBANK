@@ -5,10 +5,7 @@ import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.service.port.QuestionRepository;
 import com.junikarp.qbank.user.domain.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -63,6 +60,13 @@ public class FakeQuestionRepository implements QuestionRepository {
         return data.stream()
                 .filter(questionList::contains)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Question> findById(Long id) {
+        return data.stream()
+                .filter(question -> question.getId().equals(id))
+                .findFirst();
     }
 
 }
