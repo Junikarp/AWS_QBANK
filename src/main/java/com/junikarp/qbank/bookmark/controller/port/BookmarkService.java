@@ -19,7 +19,4 @@ public interface BookmarkService {
     // 북마크 삭제
     void delete(Long userId, Long questionId);
 
-    // 문제 아이디 리스트 추출
-    List<Question> getQuestionList(List<Bookmark> list);
-
 }

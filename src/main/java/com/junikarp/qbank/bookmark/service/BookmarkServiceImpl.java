@@ -44,10 +44,4 @@ public class BookmarkServiceImpl implements BookmarkService {
         bookmarkRepository.delete(userId, questionId);
     }
 
-    @Override
-    public List<Question> getQuestionList(List<Bookmark> list) {
-        return list.stream()
-                .map(Bookmark::getQuestion)
-                .toList();
-    }
 }
