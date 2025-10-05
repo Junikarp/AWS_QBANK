@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -117,7 +118,6 @@ class QuestionRepositoryImplTest {
         when(questionJpaRepository.findBookmarkedQuestionsByUserId(any(Long.class))).thenReturn(questions);
         List<Question> result = questionRepositoryImpl.findBookmarkedQuestionsByUserId(userId);
 
-
         //then
         assertThat(result.get(0).getId()).isEqualTo(1L);
         assertThat(result.get(0).getQuestion()).isEqualTo("1번 문제입니다");
@@ -126,5 +126,40 @@ class QuestionRepositoryImplTest {
         assertThat(result.get(1).getChoices().size()).isEqualTo(3);
 
         verify(questionJpaRepository).findBookmarkedQuestionsByUserId(any(Long.class));
+    }
+
+    @Test
+    void findById_메서드로_문제를_조회_할_수_있다() {
+        //given
+        Long id = 1L;
+
+        List<QuestionEntity> questions = new ArrayList<>();
+
+        List<ChoiceEntity> choices1 = List.of(
+                testFixtures.createChoiceEntity(1L, "A번", "1번 문제 A번 보기입니다.", false),
+                testFixtures.createChoiceEntity(2L, "B번", "1번 문제 B번 보기입니다.", true)
+        );
+        List<ChoiceEntity> choices2 = List.of(
+                testFixtures.createChoiceEntity(3L, "A번", "2번 문제 A번 보기입니다.", true),
+                testFixtures.createChoiceEntity(4L, "B번", "2번 문제 B번 보기입니다.", false),
+                testFixtures.createChoiceEntity(5L, "C번", "2번 문제 C번 보기입니다.", false)
+        );
+
+        QuestionEntity questionEntity1 = testFixtures.createQuestionEntity(1L, "1번 문제입니다", "1번 문제 해설입니다", choices1);
+        QuestionEntity questionEntity2 = testFixtures.createQuestionEntity(2L, "2번 문제입니다", "2번 문제 해설입니다", choices2);
+
+        questions.add(questionEntity1);
+        questions.add(questionEntity2);
+
+        //when
+        when(questionJpaRepository.findById(id)).thenReturn(Optional.of(questionEntity1));
+        Optional<Question> result = questionRepositoryImpl.findById(id);
+
+        //then
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get().getId()).isEqualTo(id);
+        assertThat(result.get().getQuestion()).isEqualTo("1번 문제입니다");
+        assertThat(result.get().getChoices().size()).isEqualTo(2);
+        assertThat(result.get().getChoices().get(1).getText()).isEqualTo("1번 문제 B번 보기입니다.");
     }
 }
