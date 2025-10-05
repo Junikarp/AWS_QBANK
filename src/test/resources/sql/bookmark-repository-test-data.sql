@@ -22,4 +22,4 @@ VALUES(1);
 
 INSERT INTO bookmark(id, user_id, question_id)
 VALUES (1, 1, 1),
-       (2,1,3);
+       (2, 1, 3);
