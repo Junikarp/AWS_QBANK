@@ -1,5 +1,7 @@
 package com.junikarp.qbank.wrong_answer.domain;
 
+import com.junikarp.qbank.question.domain.Question;
+import com.junikarp.qbank.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +13,8 @@ public class WrongAnswer {
 
     private Long id;
 
-    private Long userId;
+    private User user;
 
-    private Long questionId;
+    private Question question;
 
 }

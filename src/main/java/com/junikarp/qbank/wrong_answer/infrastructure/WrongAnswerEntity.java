@@ -1,6 +1,5 @@
 package com.junikarp.qbank.wrong_answer.infrastructure;
 
-import com.junikarp.qbank.question.domain.Question;
 import com.junikarp.qbank.question.infrastructure.QuestionEntity;
 import com.junikarp.qbank.user.infrastructure.UserEntity;
 import com.junikarp.qbank.wrong_answer.domain.WrongAnswer;
@@ -31,21 +30,16 @@ public class WrongAnswerEntity {
     public static WrongAnswerEntity from(WrongAnswer wrongAnswer) {
         WrongAnswerEntity wrongAnswerEntity = new WrongAnswerEntity();
         wrongAnswerEntity.id = wrongAnswer.getId();
+        wrongAnswerEntity.userEntity = UserEntity.from(wrongAnswer.getUser());
+        wrongAnswerEntity.questionEntity = QuestionEntity.from(wrongAnswer.getQuestion());
         return wrongAnswerEntity;
     }
 
     public WrongAnswer to() {
         return WrongAnswer.builder()
                 .id(id)
-                .userId(userEntity.getId())
-                .questionId(questionEntity.getId())
+                .user(userEntity.to())
+                .question(questionEntity.to())
                 .build();
-    }
-
-    public WrongAnswerEntity create(UserEntity userEntity, QuestionEntity questionEntity) {
-        WrongAnswerEntity wrongAnswerEntity = new WrongAnswerEntity();
-        wrongAnswerEntity.setUserEntity(userEntity);
-        wrongAnswerEntity.setQuestionEntity(questionEntity);
-        return wrongAnswerEntity;
     }
 }
